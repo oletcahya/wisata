@@ -66,7 +66,7 @@
                     if (!in_array($extension_foto,array('png','jpg','jpeg','gif'))){
                         echo "<script>alert('file tidak didukung!');window.location ='dashboard.php?hal=edit_galeri&id=$id'</script>";
                     }else{
-                        if($size_foto > 444444){
+                        if($size_foto > 2048){
                             echo "<script>alert('file terlalu besar!');window.location ='dashboard.php?hal=edit_galeri&id=$id'</script>";
                         } else {
                             $nama_foto_baru = rand().'_'.$nama_foto;

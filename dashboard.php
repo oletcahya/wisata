@@ -56,7 +56,7 @@ while($r1 = mysqli_fetch_array($wisata)){
   <body>
      <div class ="container-fluid" >
         <div class="row">
-            <div class="col-lg-12 py-2 bg-secondary fixed-top"  <title style="color:yellow;"><i class="bi bi-globe-asia-australia"></i><strong>CAHYAWISATA</strong></title>
+            <div class="col-lg-12 py-2 bg-secondary fixed-top"  <title style="color:yellow;"><i class="bi bi-globe-asia-australia"></i><strong>CAHYA</strong></title>
             <div class="dropdown float-right">
   <button class="btn btn-dark  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Admin

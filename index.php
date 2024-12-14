@@ -1,70 +1,171 @@
 <?php
-session_start();
-if((empty($_SESSION['username'])) and (empty($_SESSION['password']))){
+include 'koneksi.php';
+
+$query = "SELECT * FROM tbl_profil LIMIT 1";
+$sql = mysqli_query($koneksi, $query);
+
+$profil = mysqli_fetch_assoc($sql);
+
+$query = "SELECT * FROM tbl_kategori";
+$sql = mysqli_query($koneksi, $query);
+
+$categories = [];
+while ($row = mysqli_fetch_assoc($sql)) {
+    $categories[] = $row;
+}
+
+$query = "SELECT * FROM tbl_berita LIMIT 3";
+$sql = mysqli_query($koneksi, $query);
+
+$berita = [];
+while ($row = mysqli_fetch_assoc($sql)) {
+    $berita[] = $row;
+}
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>sistem informasi objek wisata</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <style>
-        .posisitengah{
-           
-            margin: 50px 400px 75px;
-            }
-        body{
-            background-color:white;
-        }
-       
-    </style>
-
+    <title>Smart Travel - Your Gateway to Extraordinary Journeys</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+        integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
-    <div class="container mt-4 ">
-        <div class="col-md-4 posisitengah">
-        <img src="img/logowisata.jpg"  width="150;" height="150" class="rounded mx-auto d-block">
-            <div class="card mt-4">
-                <!-- <div class="card-header bg-primary text-white">form login</div> -->
-                <div class="card-body">
-                <form action="cek_login.php" method="POST">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Username</label>
-                        <input type="text" name="username" class="form-control" placeholder="Enter username" required 
-                        value="<?php echo (isset($_COOKIE["username"])) ?$_COOKIE['username']:'' ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" name="password" class="form-control" placeholder="Enter password" required
-                        value="<?php echo(isset($_COOKIE["password"]))?$_COOKIE['password']:'' ?>">
-                    </div>
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1" name="remember"
-                        <?php echo((isset($_COOKIE["username"])) and (isset($_COOKIE["password"])))? "checked":""?>>
-                        <label class="form-check-label" for="exampleCheck1">Remember me</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary float-right ">Login</button>
+    <?php include 'component/navbar.php' ?>
 
-                    
-                </form>
+    <section style="background-image: url('img_profil/<?= htmlspecialchars($profil['foto_profil']) ?>');" class="hero">
+        <div class="container">
+            <h1 class="hero-text">Jelajahi Lampung Bersama Kami</h1>
+            <p class="hero-text-desc"><?= nl2br(htmlspecialchars($profil['konten_profil'])) ?>
+            </p>
+            <a href="#" class="cta-button">Start Your Journey</a>
+        </div>
+    </section>
 
+    <section class="travel-categories">
+        <div class="container">
+            <p class="section-title-head">CATEGORY</p>
+            <h2 class="section-title">Kategori Wisata Terbaik Kami</h2>
+
+            <div class="categories-grid">
+                <?php foreach ($categories as $category): ?>
+                    <div class="category-card">
+                        <img src="<?= htmlspecialchars($category['url_img']) ?>"
+                            alt="<?= htmlspecialchars($category['nama_kategori']) ?>" width="200" height="400">
+                        <div class="category-card-content">
+                            <h3><?= htmlspecialchars($category['nama_kategori']) ?></h3>
+                            <p><?= htmlspecialchars($category['keterangan']) ?></p>
+                            <a class="category-btn"
+                                href="/halaman/wisata/kategori-wisata.php?catid=<?php echo $category['id_kategori'] ?>">Read
+                                More</a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="booking-section">
+            <div class="booking-left-section">
+                <p class="booking-subtitle">Mudah Dan Cepat</p>
+                <h1>Pesan tujuan wisata Anda dalam 3 langkah mudah!</h1>
+                <div class="booking-steps">
+                    <div class="booking-step">
+                        <div class="booking-step-icon" style="background-color: #fef7e5;">
+                            <i class="fa-solid fa-tree"></i>
+                        </div>
+                        <div class="booking-step-content">
+                            <h3>Pilih Destinasi Wisata</h3>
+                            <p>Pilih destinasi wisata yang tersedia pada layanan kami</p>
+                        </div>
+                    </div>
+                    <div class="booking-step">
+                        <div class="booking-step-icon" style="background-color: #fde8e8;">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <div class="booking-step-content">
+                            <h3>Pesan Ke Whatsapp</h3>
+                            <p>Setelah memilih destinasi wisata,</p>
+                            <p>kirim pesan ke <a href="https://wa.me/6287868853973" class="whatsapp-link ">WhatsApp kami</a> untuk kami proses</p>
+                        </div>
+                    </div>
+                    <div class="booking-step">
+                        <div class="booking-step-icon" style="background-color: #e5f7f6;">
+                            <i class="fa-solid fa-truck-pickup"></i>
+                        </div>
+                        <div class="booking-step-content">
+                            <h3>Kami Kirim Info Penjemputan</h3>
+                            <p>Kami kirim info jadwal penjemputan beserta pesanan tiket dan akomodasi lainya</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="booking-right-section">
+                <div class="booking-card">
+                    <img src="/img/danau_ranau.jpg" alt="Trip to Greece" class="booking-card-image">
+                    <div class="booking-card-content">
+                        <div class="booking-card-header">
+                            <h2 class="booking-card-title">Trip Bareng Smart Travel</h2>
+                            <span class="booking-badge">Mendatang</span>
+                        </div>
+                        <p class="booking-card-details">14-29 June &nbsp;&nbsp;|&nbsp;&nbsp; by Admin</p>
+                        <p>Trip bareng bersama smart travel bersama Ke Pantai Labuhan Jukung Krui, Kabupaten Pesisir
+                            Barat ini, salah satu pantai terindah di Lampung. Pantainya yang berombak besar juga bisa
+                            untuk surfing, <a href="">Info Selengkapnya</a></p>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </section>
+
+    <!-- <section class="profile-wisata-section">
+        <div class="profile-wisata-container">
+            <div class="profile-wisata-wrap">
+                <div class="profile-wisata-image-container">
+                    <img width="500" height="500" src="/img_profil/<?= htmlspecialchars($profil['foto_profil']) ?>"
+                        alt="Foto Profil">
+                </div>
+                <div class="profile-wisata-content">
+                    <p class="profile-wisata-label">PROFIL</p>
+                    <h2 class="profile-wisata-title">Profil Wisata</h2>
+                    <p class="profile-wisata-description">
+                        <?= nl2br(htmlspecialchars($profil['konten_profil'])) ?>
+                    </p>
                 </div>
             </div>
         </div>
-    </div>
-</body>
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-</html>
+    </section> -->
 
-<?php
-}else{
-    echo"<script>window.history.go(-1)</script>";
-}
-?>
+    <section class="news-section">
+        <div class="container">
+            <h2 class="section-title">Berita Terbaru Kami</h2>
+            <div class="news-grid">
+                <?php foreach ($berita as $berita): ?>
+                    <div class="news-card">
+                        <img src="<?php echo "img_berita/" . htmlspecialchars($berita['foto_berita']); ?>"
+                        alt="<?php echo htmlspecialchars($category['judul_berita'] ?? ''); ?>">
+                        <div class="news-card-content">
+                            <h3><?php echo htmlspecialchars($berita['judul_berita']); ?></h3>
+                            <p class="news-card-content-desc"><?php echo htmlspecialchars($berita['konten_berita']); ?></p>
+                            <a href="/halaman/berita/berita.php?id=<?php echo $berita['id_berita']; ?>"
+                                class="read-more">Read
+                                More</a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
+    <?php require_once './component/footer.php' ?>
+</body>
+
+</html>
